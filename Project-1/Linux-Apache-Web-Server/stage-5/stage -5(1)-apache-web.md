@@ -133,7 +133,7 @@ sudo systemctl start wazuh-manager
 `wazuh-syscheckd`, `wazuh-remoted`, `wazuh-logcollector`,
 `wazuh-monitord`, `wazuh-modulesd`, plus the Wazuh API.
 
-## Where We've Reached
+## Where I've Reached
 
 - Networking across all three VMs fully verified.
 - `wazuh-manager` running a lean, manager-only Wazuh deployment on
