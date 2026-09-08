@@ -1,4 +1,4 @@
-# SIEM Lab — Stage 1: Splunk Universal Forwarder Setup & Log Ingestion Pipeline
+# SIEM Lab — Stage 2: Splunk Universal Forwarder Setup & Log Ingestion Pipeline
 
 **Project:** SOC Portfolio — Project 2 of 5 (SIEM Lab)
 **Date:** August 2026
@@ -52,7 +52,7 @@ Several real-world issues surfaced during setup — documenting them here since 
 
 2. **Forwarder admin account not created.** `splunk start -seed-passwd` silently failed to create the admin account because the supplied password didn't meet Splunk's minimum complexity requirement — the CLI gave no hard error, just a buried warning. Resolved by seeding the account explicitly via a `user-seed.conf` file instead.
 
-3. **Wrong forward-server target IP.** The forwarder was initially pointed at `192.168.208.20` (the IP of an unrelated VM — the Wazuh manager from a prior project) instead of splunk-siem-01's actual `192.168.208.40`. This produced a clean, diagnosable failure signature: `nc -zv` confirmed port 9997 reachable at the *correct* IP, while splunkd.log showed repeated `Connection ... failed` against the *wrong* one — isolating the fault to configuration, not networking. Resolved by removing and re-adding the correct `forward-server`.
+3. **Wrong fo![alt text](image.png)rward-server target IP.** The forwarder was initially pointed at `192.168.208.20` (the IP of an unrelated VM — the Wazuh manager from a prior project) instead of splunk-siem-01's actual `192.168.208.40`. This produced a clean, diagnosable failure signature: `nc -zv` confirmed port 9997 reachable at the *correct* IP, while splunkd.log showed repeated `Connection ... failed` against the *wrong* one — isolating the fault to configuration, not networking. Resolved by removing and re-adding the correct `forward-server`.
 
 4. **Log read permissions.** Both `apache-web-01-access.log`/`-error.log` (owned `root:adm`) and `auth.log` (owned `syslog:adm`) are `640` — a deliberate result of the Stage 4 hardening pass on apache-web-01. The forwarder runs as a dedicated `splunkfwd` user, which by default is not a member of `adm` and therefore could not read any of them. Resolved with `usermod -aG adm splunkfwd` plus a forwarder restart to pick up the new group membership.
 
